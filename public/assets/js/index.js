@@ -3,12 +3,21 @@ const $noteText = $(".note-textarea");
 const $saveNoteBtn = $(".save-note");
 const $newNoteBtn = $(".new-note");
 const $noteList = $(".list-container .list-group");
-
+//===
 // activeNote is used to keep track of the note in the textarea
-const activeNote = {};
+let activeNote = {};
 
-// A function for getting all notes from the db
-const getNotes = function() {
+
+
+// Gets notes from the db and renders them to the sidebar
+const getAndRenderNotes = () => {
+  return getNotes().then(data => {
+    renderNoteList(data);
+  });
+};
+
+
+const getNotes = () => {
   return $.ajax({
     url: "/api/notes",
     method: "GET"
@@ -16,7 +25,8 @@ const getNotes = function() {
 };
 
 // A function for saving a note to the db
-const saveNote = function(note) {
+let saveNote = (note) => {
+
   return $.ajax({
     url: "/api/notes",
     data: note,
@@ -24,10 +34,11 @@ const saveNote = function(note) {
   });
 };
 
+
 // A function for deleting a note from the db
-const deleteNote = (id) => {
+const deleteNote = id => {
   return $.ajax({
-    url: "api/notes/" + id,
+    url: "./assets/db/db.json" + id,
     method: "DELETE"
   });
 };
@@ -56,7 +67,7 @@ const handleNoteSave = () => {
     text: $noteText.val()
   };
 
-  saveNote(newNote).then((data) => {
+  saveNote(newNote).then(data => {
     getAndRenderNotes();
     renderActiveNote();
   });
@@ -75,7 +86,7 @@ const handleNoteDelete = function(event) {
     activeNote = {};
   }
 
-  deleteNote(note.id).then(() =>{
+  deleteNote(note.id).then(() => {
     getAndRenderNotes();
     renderActiveNote();
   });
@@ -104,7 +115,7 @@ const handleRenderSaveBtn = () => {
 };
 
 // Render's the list of note titles
-const renderNoteList = (notes) => {
+const renderNoteList = notes => {
   $noteList.empty();
 
   let noteListItems = [];
@@ -125,12 +136,6 @@ const renderNoteList = (notes) => {
   $noteList.append(noteListItems);
 };
 
-// Gets notes from the db and renders them to the sidebar
-const getAndRenderNotes = () => {
-  return getNotes().then((data) => {
-    renderNoteList(data);
-  });
-};
 
 
 $saveNoteBtn.on("click", handleNoteSave);
