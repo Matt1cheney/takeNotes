@@ -9,7 +9,7 @@ const uuidv4 = require("uuid/v4");
 //express app setup
 // ================================================================
 const app = express();
-const PORT = 3307;
+const PORT = process.env.PORT || 8080;
 
 // sets up the express app
 // ================================================================
