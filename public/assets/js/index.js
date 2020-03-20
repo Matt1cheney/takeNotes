@@ -1,3 +1,4 @@
+
 const $noteTitle = $(".note-title");
 const $noteText = $(".note-textarea");
 const $saveNoteBtn = $(".save-note");
@@ -38,7 +39,7 @@ let saveNote = (note) => {
 // A function for deleting a note from the db
 const deleteNote = id => {
   return $.ajax({
-    url: "./assets/db/db.json" + id,
+    url: "/api/notes/" + id,
     method: "DELETE"
   });
 };
@@ -64,7 +65,8 @@ const renderActiveNote = () => {
 const handleNoteSave = () => {
   let newNote = {
     title: $noteTitle.val(),
-    text: $noteText.val()
+    text: $noteText.val(),
+    id:""
   };
 
   saveNote(newNote).then(data => {
